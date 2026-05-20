@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Convertisseur Point-Virgule</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px;
+      background: #111;
+      color: white;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 250px;
+      background: #222;
+      color: white;
+      border: 1px solid #555;
+      padding: 10px;
+      font-family: monospace;
+      font-size: 14px;
+      box-sizing: border-box;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 12px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+
+    .row {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Convertisseur ; → saut de ligne</h1>
+
+  <div class="row">
+    <input type="file" id="fileInput">
+  </div>
+
+  <textarea id="input" placeholder="Le texte du fichier apparaîtra ici..."></textarea>
+
+  <div class="row">
+    <button onclick="convertText()">Convertir</button>
+    <button onclick="downloadText()">Télécharger TXT</button>
+  </div>
+
+  <textarea id="output" placeholder="Résultat..."></textarea>
+
+  <script>
+    const fileInput = document.getElementById('fileInput');
+    const input = document.getElementById('input');
+    const output = document.getElementById('output');
+
+    fileInput.addEventListener('change', (event) => {
+      const file = event.target.files[0];
+
+      if (!file) return;
+
+      const reader = new FileReader();
+
+      reader.onload = function(e) {
+        input.value = e.target.result;
+      };
+
+      reader.readAsText(file);
+    });
+
+    function convertText() {
+      const setupCode = `// setup code  for gcode
+// codes make you happy
+
+#include <Servo.h>
+#include <Arduino.h>
+#include <Wire.h>
+#include <SoftwareSerial.h>
+#include "src/X113647Stepper.h"
+
+float x_endstop_value = 0;
+float y_endstop_value = 0;
+float home = 0;
+float xmax = 0;
+float ymax = 0;
+float ciblex = 0;
+float cibley = 0;
+float pos_x = 0;
+float pos_y = 0;
+
+void rgb_y(){
+  analogWrite(2,255);
+  analogWrite(3,120);
+  analogWrite(4,0);
+
+}
+void rgb_w(){
+  analogWrite(2,255);
+  analogWrite(3,255);
+  analogWrite(4,255);
+
+}
+void rgb_off(){
+  analogWrite(2,0);
+  analogWrite(3,0);
+  analogWrite(4,0);
+
+}
+void rgb_r(){
+  analogWrite(2,255);
+  analogWrite(3,0);
+  analogWrite(4,0);
+
+}
+void rgb_g(){
+  analogWrite(2,0);
+  analogWrite(3,255);
+  analogWrite(4,0);
+
+}
+Servo servo_22;
+void pendown=1(){
+  servo_22.write(80);
+  _delay(1);
+
+}
+void penup=0(){
+  servo_22.write(120);
+  _delay(1);
+
+}
+void crit_errror(){
+  while(1) {
+      rgb_off();
+      _delay(0.5);
+      tone(11,82,0.25*1000);
+      delay(0.25*1000);
+      rgb_r();
+      _delay(0.5);
+
+      _loop();
+  }
+
+}
+X113647Stepper stepMotor_1(2048, 36, 34, 32, 30);
+
+X113647Stepper stepMotor_2(2048, 46, 44, 42, 40);
+
+void goto_(){
+  rgb_y();
+  if(pos_x < ciblex){
+    while(!(pos_x == ciblex))
+    {
+      _loop();
+      stepMotor_1.step(-10);
+      pos_x += 10;
+
+    }
+
+  }
+  if(pos_x > ciblex){
+    while(!(pos_x == ciblex))
+    {
+      _loop();
+      stepMotor_1.step(10);
+      pos_x += -10;
+
+    }
+
+  }
+  if(pos_x == ciblex){
+
+  }
+  if(pos_y < cibley){
+    while(!(pos_y == cibley))
+    {
+      _loop();
+      stepMotor_2.step(10);
+      pos_y += 10;
+
+    }
+
+  }
+  if(pos_y > cibley){
+    while(!(pos_y == cibley))
+    {
+      _loop();
+      stepMotor_2.step(-10);
+      pos_y += -10;
+
+    }
+
+  }
+  if(pos_y == ciblex){
+
+  }
+
+}
+
+void _delay(float seconds) {
+  long endTime = millis() + seconds * 1000;
+  while(millis() < endTime) _loop();
+}
+
+void setup() {
+  pinMode(2,OUTPUT);
+  pinMode(3,OUTPUT);
+  pinMode(4,OUTPUT);
+  servo_22.attach(22);
+  pinMode(11,OUTPUT);
+  stepMotor_1.setSpeed(6);
+  stepMotor_2.setSpeed(6);
+  pinMode(50,INPUT);
+  pinMode(51,INPUT);
+  penup();
+  rgb_w();
+  xmax = 1430;
+  ymax = 1095;
+  y_endstop_value = -10;
+  x_endstop_value = 10;
+  home = 0;
+  tone(11,1760,0.1*1000);
+  delay(0.1*1000);
+  stepMotor_1.step(-100);
+  stepMotor_2.step(100);
+  _delay(1);
+  while(!(digitalRead(50) == 0.000000))
+  {
+    _loop();
+    stepMotor_1.step(x_endstop_value);
+
+  }
+  home += 0.5;
+  _delay(1);
+  while(!(digitalRead(51) == 0.000000))
+  {
+    _loop();
+    stepMotor_2.step(y_endstop_value);
+
+  }
+  home += 0.5;
+  if(home < 1.1){
+    rgb_g();
+    pos_x = 0;
+    pos_y = 0;
+    tone(11,1976,0.25*1000);
+    delay(0.25*1000);
+
+  }
+  _delay(1);
+
+}
+
+void _loop() {
+}
+
+void loop() {
+  _loop();
+}
+
+// gemini edit
+
+`;
+
+      const converted = input.value.replace(/;/g, ';\n');
+
+      output.value = setupCode + "\n\n" + converted;
+    }
+
+    function downloadText() {
+      const blob = new Blob([output.value], { type: 'text/plain' });
+
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'converted.txt';
+
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+  </script>
+
+</body>
+</html>
