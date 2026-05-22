@@ -48,12 +48,12 @@ void rgb_g(){
 
 }
 Servo servo_22;
-void pendown=1(){
+void pendown1(){
   servo_22.write(80);
   _delay(1);
 
 }
-void penup=0(){
+void pendonw0(){
   servo_22.write(120);
   _delay(1);
 
