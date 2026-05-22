@@ -136,7 +136,7 @@ void pendown1(){
   _delay(1);
 }
 
-void penup(){
+void pendown0(){
   servo_22.write(120);
   _delay(1);
 }
@@ -222,7 +222,7 @@ void setup() {
   pinMode(50,INPUT_PULLUP);
   pinMode(51,INPUT_PULLUP);
 
-  penup();
+  pendown();
 
   rgb_w();
 
