@@ -28,20 +28,12 @@ void _delay(float seconds) {
 }
 
 void setup() {
-  pinMode(2,OUTPUT);
-  pinMode(3,OUTPUT);
-  pinMode(4,OUTPUT);
   servo_22.attach(22);
   stepper_1.setSpeed(10);
   stepper_2.setSpeed(10);
   pinMode(11,OUTPUT);
   pinMode(50,INPUT);
   pinMode(51,INPUT);
-  voidrgb_y() {
-    analogWrite(2,255);
-    analogWrite(3,120);
-    analogWrite(4,0);
-    }
   voidpenup1() {
     servo_22.write(80);
     _delay(1);
@@ -51,7 +43,6 @@ void setup() {
     _delay(1);
     }
   voidgoto_() {
-    rgb_y();
     if(pos_x < ciblex){
       while(!(pos_x == ciblex)){
         stepper_1.step(-10);
