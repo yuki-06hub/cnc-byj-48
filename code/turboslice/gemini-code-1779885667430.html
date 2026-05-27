@@ -87,12 +87,13 @@ float ciblex = 0;
 float cibley = 0;
 float pos_x = 0;
 float pos_y = 0;
+float step_speed = 10;
 
 Servo servo_22;
 
 // 28BYJ-48
-Stepper stepper_1(2048, 30, 32, 34, 36);
-Stepper stepper_2(2048, 40, 42, 44, 46);
+Stepper stepper_1(2048, 30, 34, 32, 36);
+Stepper stepper_2(2048, 40, 44, 42, 46);
 
 void _loop() {
 }
@@ -177,8 +178,8 @@ void setup() {
 
   servo_22.attach(22);
 
-  stepper_1.setSpeed(10);
-  stepper_2.setSpeed(10);
+  stepper_1.setSpeed(step_speed);
+  stepper_2.setSpeed(step_speed);
 
   pendown0();
 
