@@ -113,11 +113,11 @@ void setup() {
     analogWrite(3,120);
     analogWrite(4,0);
     }
-  voidpenup1() {
+  voidpendown1() {
     servo_22.write(80);
     _delay(1);
     }
-  voidpenup0() {
+  voidpendown0() {
     servo_22.write(120);
     _delay(1);
     }
@@ -162,7 +162,7 @@ void setup() {
 
     }
     }
-  penup0();
+  pendown0();
   xmax = 1430;
   ymax = 1095;
   y_endstop_value = -10;
