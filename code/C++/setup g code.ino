@@ -17,8 +17,8 @@ float pos_y = 0;
 Servo servo_22;
 
 // 28BYJ-48
-Stepper stepper_1(2048, 30, 32, 34, 36);
-Stepper stepper_2(2048, 40, 42, 44, 46);
+Stepper stepper_1(2048, 30, 34, 32, 36);
+Stepper stepper_2(2048, 40, 44, 42, 46);
 
 void _loop() {
 }
